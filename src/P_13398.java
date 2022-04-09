@@ -9,7 +9,7 @@ class P_13398 {
     int n = Integer.parseInt(br.readLine());
     int[] seq = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
     int[][] dp = new int[n][2];
-    dp[0][0] = seq[0];
+    dp[0][0] = seq[0]; 
     int max = seq[0];
     
     for(int i = 1; i < n; i++) {
