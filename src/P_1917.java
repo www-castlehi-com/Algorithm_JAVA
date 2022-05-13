@@ -4,39 +4,18 @@ import java.util.StringTokenizer;
 
 public class P_1917 {
 
-    static String[][] cubes = { // 정육면체의 전개도는 총 11개 밖에 없다.
-            {"0010",
-                    "1111",
-                    "0010"},
-            {"0100",
-                    "1111",
-                    "1000"},
-            {"0010",
-                    "1111",
-                    "0100"},
-            {"0001",
-                    "1111",
-                    "1000"},
-            {"0001",
-                    "1111",
-                    "0100"},
-            {"11100",
-                    "00111"},
-            {"1100",
-                    "0111",
-                    "0010"},
-            {"1100",
-                    "0111",
-                    "0001"},
-            {"0010",
-                    "1110",
-                    "0011"},
-            {"0001",
-                    "1111",
-                    "0001"},
-            {"1100",
-                    "0110",
-                    "0011"}
+    static String[][] cubes = {
+            {"0010", "1111", "0010"},
+            {"0100", "1111", "1000"},
+            {"0010", "1111", "0100"},
+            {"0001", "1111", "1000"},
+            {"0001", "1111", "0100"},
+            {"11100", "00111"},
+            {"1100", "0111", "0010"},
+            {"1100", "0111", "0001"},
+            {"0010", "1110", "0011"},
+            {"0001", "1111", "0001"},
+            {"1100", "0110", "0011"}
     };
 
     public static void main(String[] args) throws IOException {
@@ -49,10 +28,7 @@ public class P_1917 {
             int map[][] = new int[6][6];
 
             for(int i=0; i<6; i++) {
-                stk = new StringTokenizer(br.readLine(), " ");
-                for(int j=0; j<6; j++) {
-                    map[i][j] = Integer.parseInt(stk.nextToken());
-                }
+               map[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
             }
 
             boolean ans = false;
@@ -60,14 +36,12 @@ public class P_1917 {
             for(String c[] : cubes) {
                 String[] cube = new String[c.length];
 
-                // c배열을 cube 배열에 복사
                 System.arraycopy(c, 0, cube, 0, c.length);
 
                 for(int mir=0; mir<2; mir++) {
                     for(int rot=0; rot<4; rot++) {
                         for(int i=0; i<6; i++) {
                             for(int j=0; j<6; j++) {
-                                // 한번이라도 true면 yes
                                 ans |= check(map, cube, i, j);
 
                                 if(ans) break loop;
@@ -75,7 +49,7 @@ public class P_1917 {
                         }
                         cube = rotate(cube);
                     }
-                    cube = mirror(cube);
+                    cube = reverse(cube);
                 }
             }
             System.out.println(ans ? "yes" : "no");
@@ -104,8 +78,8 @@ public class P_1917 {
         }
         return true;
     }
-    // 뒤집기(옆), 위 혹은 아래로 뒤집는건 의미 x
-    public static String[] mirror(String[] cube) {
+
+    public static String[] reverse(String[] cube) {
         String[] ans = new String[cube.length];
 
         for(int i=0; i<cube.length; i++) {
@@ -114,7 +88,7 @@ public class P_1917 {
 
         return ans;
     }
-    // 시계 방향 90도 회전
+
     public static String[] rotate(String[] cube) {
         String[] ans = new String[cube[0].length()];
 
