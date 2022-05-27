@@ -1,23 +1,18 @@
 import java.io.*;
+import java.util.Arrays;
 
-public class P_2839 {
+public class P_2869 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int n = Integer.parseInt(br.readLine());
-        int cnt = Integer.MAX_VALUE;
-        if (n % 3 == 0) cnt = n / 3;
+        int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int a = arr[0], b = arr[1], v = arr[2];
 
-        int bag_5 = n / 5;
-        for (int i = 1; i <= bag_5; i++) {
-            int sub_cnt = 0;
-            if ((n - (i * 5)) % 3 == 0) sub_cnt += i + ((n - (i * 5)) / 3);
-            if (sub_cnt != 0 && cnt > sub_cnt) cnt = sub_cnt;
-        }
+        int day = (v - b) / (a - b);
+        if ((v - b) % (a - b) != 0) day++;
 
-        if (cnt == Integer.MAX_VALUE) bw.write("-1");
-        else bw.write(Integer.toString(cnt));
+        bw.write(Integer.toString(day));
         bw.flush();
     }
 }
