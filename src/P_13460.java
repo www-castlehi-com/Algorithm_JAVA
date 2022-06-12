@@ -7,8 +7,6 @@ public class P_13460 {
     static Character[][] board;
     static RedBlueMarble redBlueMarble = new RedBlueMarble();
     static boolean[][][][] visited;
-    static int cnt = 0;
-    static boolean flag;
 
     public static class RedBlueMarble {
         int redX, redY;
@@ -24,18 +22,11 @@ public class P_13460 {
             redY = prev.redY;
             blueX = prev.blueX;
             blueY = prev.blueY;
-            count = 0;
+            count = prev.count;
         }
 
-        public RedBlueMarble(int redX, int redY, int blueX, int blueY) {
-            this.redX = redX;
-            this.redY = redY;
-            this.blueX = blueX;
-            this.blueY = blueY;
-        }
-
-        public boolean isEqual(RedBlueMarble marble) {
-            if (marble.redX == this.redX && marble.redY == this.redY && marble.blueX == this.blueX && marble.blueY == this.blueY) return true;
+        public boolean isEqual() {
+            if (this.redX == this.blueX && this.redY == this.blueY) return true;
             else return false;
         }
     }
@@ -79,61 +70,67 @@ public class P_13460 {
             RedBlueMarble cur = queue.poll();
             visited[cur.redY][cur.redX][cur.blueY][cur.blueX] = true;
             cnt = cur.count;
-            if (cnt > 10) return -1;
+            if (cnt >= 10) return -1;
 
             for (int i = 0; i < 4; i++) {
                 RedBlueMarble sample = new RedBlueMarble(cur);
-                int[] marbles = new int[2];
-                board[sample.redY][sample.redX] = 'R';
-                board[sample.blueY][sample.blueX] = 'B';
-                while (true) {
-                    int cantMove = 0;
 
-                    int redX = sample.redX + dx[i];
-                    int redY = sample.redY + dy[i];
-                    int blueX = sample.blueX + dx[i];
-                    int blueY = sample.blueY + dy[i];
+                int blueMove = move(sample, dy[i], dx[i], 'B');
+                if (blueMove != 0) {
+                    int redMove = move(sample, dy[i], dx[i], 'R');
+                    if (redMove == 0) return sample.count + 1;
 
-                    if (marbles[0] == 0) {
-                        if (board[redY][redX] == '.') {
-                            board[sample.redY][sample.redX] = '.';
-                            sample.redX = redX;
-                            sample.redY = redY;
-                            board[sample.redY][sample.redX] = 'R';
-                        } else if (board[redY][redX] == 'O') {
-                            marbles[0] = 1;
-                            board[sample.redY][sample.redX] = '.';
-                        } else if (board[redY][redX] == '#' || board[redY][redX] == 'B') cantMove++;
+                    equalCheck(cur, sample, dy[i], dx[i]);
+                    if (!visited[sample.redY][sample.redX][sample.blueY][sample.blueX]) {
+                        sample.count = sample.count + 1;
+                        queue.add(sample);
                     }
-                    if (marbles[1] == 0) {
-                        if (board[blueY][blueX] == '.') {
-                            board[sample.blueY][sample.blueX] = '.';
-                            sample.blueX = blueX;
-                            sample.blueY = blueY;
-                            board[sample.blueY][sample.blueX] = 'B';
-                        } else if (board[blueY][blueX] == 'O') {
-                            board[sample.blueY][sample.blueX] = '.';
-                            marbles[1] = 1;
-                        } else if (board[blueY][blueX] == '#' || board[blueY][blueX] == 'R') {
-                            cantMove++;
-                            if (marbles[0] == 1) return cnt + 1;
-                        }
-                    }
-
-                    if (cantMove == 2) break;
-                    else if (marbles[1] == 1) break;
-                }
-
-                if (marbles[1] == 0 && marbles[0] == 1) return cnt + 1;
-                else if (marbles[1] == 1 && marbles[0] == 1) return -1;
-                board[sample.redY][sample.redX] = board[sample.blueY][sample.blueX] = '.';
-                if (!visited[sample.redY][sample.redX][sample.blueY][sample.blueX]) {
-                    visited[sample.redY][sample.redX][sample.blueY][sample.blueX] = true;
-                    sample.count = cur.count + 1;
-                    queue.add(sample);
                 }
             }
         }
-        return cnt;
+        return -1;
+    }
+
+    public static int move (RedBlueMarble marble, int dy, int dx, Character color) {
+        while (true) {
+            int nextY, nextX;
+
+            if (color == 'B') {
+                nextY = marble.blueY + dy;
+                nextX = marble.blueX + dx;
+
+                if (board[nextY][nextX] == '#') return 1;
+                else if (board[nextY][nextX] == 'O') return 0;
+
+                marble.blueY = nextY;
+                marble.blueX = nextX;
+            }
+            else {
+                nextY = marble.redY + dy;
+                nextX = marble.redX + dx;
+
+                if (board[nextY][nextX] == '#') return 1;
+                else if (board[nextY][nextX] == 'O') return 0;
+
+                marble.redY = nextY;
+                marble.redX = nextX;
+            }
+        }
+    }
+
+    public static void equalCheck(RedBlueMarble standard, RedBlueMarble target, int directionY, int directionX) {
+        if (target.isEqual()) {
+            int dyBlue = Math.abs(standard.blueY - target.blueY);
+            int dxBlue = Math.abs(standard.blueX - target.blueX);
+
+            int dyRed = Math.abs(standard.redY - target.redY);
+            int dxRed = Math.abs(standard.redX - target.redX);
+
+            if (dyBlue > dyRed) target.blueY = target.blueY + (directionY * -1);
+            else target.redY = target.redY + (directionY * -1);
+
+            if (dxBlue > dxRed) target.blueX = target.blueX + (directionX * -1);
+            else target.redX = target.redX + (directionX * -1);
+        }
     }
 }
