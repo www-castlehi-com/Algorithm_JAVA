@@ -25,14 +25,18 @@ package DXAlgorithm.Preview;////////////////////////////////////////////////////
 //System.out.println(var);		       				   // 문자열 1개 출력하는 예제
 //System.out.println(AB);		       				     // long 변수 1개 출력하는 예제
 /////////////////////////////////////////////////////////////////////////////////////////////
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Scanner;
 
 /*
    사용하는 클래스명이 Solution 이어야 하므로, 가급적 Solution.java 를 사용할 것을 권장합니다.
    이러한 상황에서도 동일하게 java Solution 명령으로 프로그램을 수행해볼 수 있습니다.
  */
-class P_SDX_Summer_6_No2
+class P_SDX_Summer_6_No3
 {
+
+    static int max;
 
     public static void main(String args[]) throws Exception
     {
@@ -55,31 +59,64 @@ class P_SDX_Summer_6_No2
 		   여러 개의 테스트 케이스가 주어지므로, 각각을 처리합니다.
 		*/
 
-        for(int test_case = 1; test_case <= T; test_case++)
-        {
-            int n = sc.nextInt();
+        for(int test_case = 1; test_case <= T; test_case++) {
+            max = Integer.MIN_VALUE;
 
-            int max = Integer.MIN_VALUE;
-
-            int[] hallway = new int[200];
-
-            for (int i = 0; i < n; i++) {
-                int s = (sc.nextInt() - 1) / 2;
-                int e = (sc.nextInt() - 1) / 2;
-
-                if (s > e) {
-                    int tmp = s;
-                    s = e;
-                    e = tmp;
-                }
-
-                for (int j = s; j <= e; j++) {
-                    hallway[j]++;
-                    if (hallway[j] > max) max = hallway[j];
-                }
+            String string = sc.next();
+            int[] num = new int[string.length()];
+            for (int i = 0; i < string.length(); i++) {
+                num[i] = string.charAt(i) - '0';
             }
+            int maxSwap = sc.nextInt();
+
+            dfs(num,0, 0, maxSwap);
 
             System.out.println("#" + test_case + " " + max);
         }
+    }
+
+    private static int madeNumber(int[] num) {
+        int result = 0;
+        for (int i : num) {
+            result = result * 10 + i;
+        }
+        return result;
+    }
+
+    private static void dfs(int[] num, int idx, int swapCnt, int maxSwap) {
+
+        if (swapCnt == maxSwap) {
+            int result = madeNumber(num);
+            if (max < result) max = result;
+            return;
+        }
+        else {
+            for (int i = idx; i < num.length - 1; i++) {
+                for (int j = i + 1; j < num.length; j++) {
+                    if (num[i] <= num[j]) {
+                        swap(num, i, j);
+                        dfs(num, i, swapCnt + 1, maxSwap);
+                        swap(num, i, j);
+                    }
+                }
+            }
+        }
+
+        if (max == Integer.MIN_VALUE && swapCnt < maxSwap) {
+            int left = (maxSwap - swapCnt) % 2;
+            if (left == 1) {
+                int tmp = num[num.length - 2];
+                num[num.length - 2] = num[num.length - 1];
+                num[num.length - 1] = tmp;
+            }
+
+            dfs(num, idx, swapCnt, maxSwap);
+        }
+    }
+
+    private static void swap(int[] num, int a, int b) {
+        int tmp = num[a];
+        num[a] = num[b];
+        num[b] = tmp;
     }
 }
