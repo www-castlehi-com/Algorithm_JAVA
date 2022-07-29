@@ -28,6 +28,7 @@ package DXAlgorithm.Preview;
 //System.out.println(AB);		       				     // long 변수 1개 출력하는 예제
 /////////////////////////////////////////////////////////////////////////////////////////////
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -35,10 +36,8 @@ import java.util.Scanner;
    사용하는 클래스명이 Solution 이어야 하므로, 가급적 Solution.java 를 사용할 것을 권장합니다.
    이러한 상황에서도 동일하게 java Solution 명령으로 프로그램을 수행해볼 수 있습니다.
  */
-class P_SDX_Summer_8_No3
+class P_SDX_Summer_8_No4
 {
-
-    static final int MOD = 20171109;
 
     public static void main(String args[]) throws Exception
     {
@@ -64,68 +63,35 @@ class P_SDX_Summer_8_No3
         for(int test_case = 1; test_case <= T; test_case++)
         {
             int n = sc.nextInt();
-            PriorityQueue<Integer> minHeap = new PriorityQueue<>(Collections.reverseOrder());
-            PriorityQueue<Integer> maxHeap = new PriorityQueue<>();
-            int a = sc.nextInt();
-            int b = sc.nextInt();
-            int c = sc.nextInt();
 
-            int subMid = 0;
-            if (a > b && a > c) {
-                maxHeap.add(a);
-                minHeap.add(b);
-                minHeap.add(c);
-                if (b > c) subMid = b;
-                else subMid = c;
-            }
-            else if (a < b && a < c) {
-                minHeap.add(a);
-                if (b < c) {
-                    minHeap.add(b);
-                    maxHeap.add(c);
-                    subMid = b;
-                }
-                else {
-                    minHeap.add(c);
-                    maxHeap.add(b);
-                    subMid = c;
-                }
-            }
-            else {
-               minHeap.add(a);
-               subMid = a;
-               if (b < c) {
-                   minHeap.add(b);
-                   maxHeap.add(c);
-               }
-               else {
-                   minHeap.add(c);
-                   maxHeap.add(b);
-               }
-            }
+            int x = 0;
+            int d = 1;
+            int[] a = new int[n];
+            for (int i = 0; i < n; i++) a[i] = sc.nextInt();
+            int k = sc.nextInt();
 
-//            System.out.println("subMid = " + subMid);
-            int mid = subMid;
-
-            for (int i = 1; i < n; i++) {
-                int x = sc.nextInt();
-                int y = sc.nextInt();
-
-                if (x < subMid) minHeap.add(x);
-                else maxHeap.add(x);
-                if (y < subMid) minHeap.add(y);
-                else maxHeap.add(y);
-
-                if (minHeap.size() < maxHeap.size()) minHeap.add(maxHeap.remove());
-                if (minHeap.size() > maxHeap.size() + 1) maxHeap.add(minHeap.remove());
-
-                subMid = minHeap.peek();
-//                System.out.println("subMid = " + subMid);
-
-                mid = (mid + subMid) % MOD;
-            }
-
-            System.out.println("#" + test_case + " " + mid);
+            System.out.println("#" + test_case + " " + dikjstra(x, d, a, k));
         }
+    }
+
+    private static int dikjstra(int x, int d, int[] a, int k) {
+        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparing(o -> o[1]));
+        queue.add(new int[] {x + 1, 1});
+
+        while (!queue.isEmpty()) {
+            int[] poll = queue.poll();
+
+            int curX = poll[0];
+            int curDCnt = poll[1];
+
+            if (curX == k) return curDCnt;
+
+            for (int i = 0; i < a.length; i++) {
+                if (curX * a[i] <= k) queue.add(new int[] {curX * a[i], curDCnt});
+            }
+            if (curX + d <= k) queue.add(new int[] {curX + d, curDCnt + 1});
+        }
+
+        return 1;
     }
 }
