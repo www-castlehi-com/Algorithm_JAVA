@@ -27,7 +27,6 @@ package DXAlgorithm.Preview;
 //System.out.println(var);		       				   // 문자열 1개 출력하는 예제
 //System.out.println(AB);		       				     // long 변수 1개 출력하는 예제
 /////////////////////////////////////////////////////////////////////////////////////////////
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Scanner;
@@ -76,7 +75,7 @@ class P_SDX_Summer_8_No4
 
     private static int dikjstra(int x, int d, int[] a, int k) {
         PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparing(o -> o[1]));
-        queue.add(new int[] {x + 1, 1});
+        queue.add(new int[] {k, 0});
 
         while (!queue.isEmpty()) {
             int[] poll = queue.poll();
@@ -84,12 +83,12 @@ class P_SDX_Summer_8_No4
             int curX = poll[0];
             int curDCnt = poll[1];
 
-            if (curX == k) return curDCnt;
+            if (curX == 0) return curDCnt;
 
+            queue.add(new int[] {0, curDCnt + curX});
             for (int i = 0; i < a.length; i++) {
-                if (curX * a[i] <= k) queue.add(new int[] {curX * a[i], curDCnt});
+                queue.add(new int[]{curX / a[i], curDCnt + curX % a[i]});
             }
-            if (curX + d <= k) queue.add(new int[] {curX + d, curDCnt + 1});
         }
 
         return 1;

@@ -25,8 +25,6 @@ package DXAlgorithm.Preview;////////////////////////////////////////////////////
 //System.out.println(var);		       				   // 문자열 1개 출력하는 예제
 //System.out.println(AB);		       				     // long 변수 1개 출력하는 예제
 /////////////////////////////////////////////////////////////////////////////////////////////
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
 /*
@@ -104,10 +102,8 @@ class P_SDX_Summer_6_No3
 
         if (max == Integer.MIN_VALUE && swapCnt < maxSwap) {
             int left = (maxSwap - swapCnt) % 2;
-            if (left == 1) {
-                int tmp = num[num.length - 2];
-                num[num.length - 2] = num[num.length - 1];
-                num[num.length - 1] = tmp;
+            if (left == 1 && num.length >= 2) {
+                swap(num, num.length - 2, num.length - 1);
             }
 
             dfs(num, idx, swapCnt, maxSwap);
