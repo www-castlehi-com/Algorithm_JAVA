@@ -7,7 +7,7 @@ import java.util.*;
 class SWEA_9416 {
 
     static class UserSolution {
-        
+
         User[] users;
         Map<Integer, Post> posts;
 
@@ -48,14 +48,6 @@ class SWEA_9416 {
         public void follow(int uID1, int uID2, int timestamp)
         {
             users[uID1].follow[uID2] = 1;
-
-            System.out.println();
-            System.out.println("follow");
-            for (int i = 1; i < users.length; i++) {
-                System.out.print(i + " : ");
-                for (int j = 1; j < users[i].follow.length; j++) System.out.print(users[i].follow[j] + " ");
-                System.out.println();
-            }
         }
 
         public void makePost(int uID, int pID, int timestamp)
@@ -71,86 +63,47 @@ class SWEA_9416 {
 
         public void getFeed(int uID, int timestamp, int pIDList[])
         {
-            LinkedList<Post> pq = new LinkedList<>();
-            int size = pq.size() > 10 ? 10 : pq.size();
-            
-            int following = 0;
-            for (int i = 1; i < users[uID].follow.length; i++) {
-                if (users[uID].follow[i] != 0) following += (1 << i);
-            }
+            Arrays.fill(pIDList, 0);
 
             for (int i = this.posts.size(); i > 0; i--) {
-                int tUID = (1 << posts.get(i).uId);
+                int tUID = posts.get(i).uId;
                 int tTimeStamp = posts.get(i).timestamp;
                 int tLike = posts.get(i).like;
 
-                size = pq.size() > 10 ? 10 : pq.size();
-                
-                if ((following & tUID) == tUID) {
-                    if (pq.isEmpty()) pq.add(posts.get(i));
-                    else {
-                        boolean insert = false;
-                        
-                        for (int j = 0; j < size; j++) {
-                            if (Math.abs(tTimeStamp - timestamp) > 1000) {
-                                if (pq.get(j).timestamp < tTimeStamp) {
-                                    pq.add(j, posts.get(i));
-                                    insert = true;
-                                    break;
-                                }
-                            }
-                            else {
-                                if (Math.abs(pq.get(j).timestamp) - timestamp > 1000) {
-                                    pq.add(j, posts.get(i));
-                                    insert = true;
-                                    break;
-                                }
-                                else {
-                                    System.out.println("pId = " + posts.get(i).pId + " tLike = " + tLike);
-                                    System.out.println("pq.get(j).pId = " + pq.get(j).pId + " pq.get(j).like = " + pq.get(j).like);
-                                    if (pq.get(j).like < tLike) {
-                                        pq.add(j, posts.get(i));
-                                        insert = true;
-                                        break;
-                                    }
-                                    else if (pq.get(j).like == tLike) {
-                                        if (pq.get(j).timestamp < tTimeStamp) pq.add(j, posts.get(i));
-                                        else {
-                                            int idx = j + 1;
-                                            while (idx < pq.size() && pq.get(idx).timestamp > tTimeStamp) idx++;
+                if (!isContain(uID, tUID)) continue;
 
-                                            pq.add(idx, posts.get(i));
-                                        }
+                if (Math.abs(timestamp - tTimeStamp) > 1000 && pIDList[9] != 0) break;
 
-                                        insert = true;
-                                        break;
-                                    }
-                                }
-                            }
+                for (int j = 0; j < pIDList.length; j++) {
+                    if (pIDList[j] == 0) {
+                        pIDList[j] = posts.get(i).pId;
+                        break;
+                    }
+
+                    Post compare = posts.get(pIDList[j]);
+
+                    if (Math.abs(timestamp - compare.timestamp) <= 1000 && Math.abs(timestamp - tTimeStamp) <= 1000) {
+                        if (tLike > compare.like) {
+                            move(j, pIDList);
+                            pIDList[j] = posts.get(i).pId;
+                            break;
                         }
-                        
-                        if (!insert && pq.size() < 10) pq.addLast(posts.get(i));
                     }
                 }
             }
+        }
 
-            size = pq.size() > 10 ? 10 : pq.size();
-            for (int i = 0; i < size; i++) {
-                pIDList[i] = pq.get(i).pId;
+        private void move(int j, int[] pIDList) {
+            for (int i = pIDList.length - 1; i > j; i--) {
+                pIDList[i] = pIDList[i - 1];
             }
+        }
 
-            System.out.println();
-            System.out.println("uID = " + uID);
-            System.out.println("timestamp = " + timestamp);
-            System.out.println("posts : ");
-            for (Map.Entry<Integer, Post> entry : posts.entrySet()) {
-                System.out.println("pId : " + entry.getKey() + " uId : " + entry.getValue().uId + " like : " + entry.getValue().like + " timeStamp : " + entry.getValue().timestamp);
-            }
-            System.out.println("pq : ");
-            for (int i = 0; i < size; i++) {
-                System.out.println("pId : " + pq.get(i).pId + " uId : " + pq.get(i).uId + " like : " + pq.get(i).like + " timeStamp : " + pq.get(i).timestamp);
-            }
+        private boolean isContain(int uId, int targetId) {
+            if (targetId > users.length) return false;
 
+            if (users[uId].follow[targetId] == 1) return true;
+            else return false;
         }
     }
 
@@ -285,7 +238,7 @@ class SWEA_9416 {
 
                     }
 
-                    System.out.println("ans_pIdList = " + ans_pIdList[i] + " " + ret);
+//                    System.out.println("ans_pIdList = " + ans_pIdList[i] + " " + "pIdList = "  + pIdList[i] + " result = " + ret);
                 }
             }
         }
