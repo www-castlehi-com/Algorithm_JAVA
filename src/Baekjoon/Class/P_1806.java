@@ -1,0 +1,32 @@
+package Baekjoon.Class;
+
+import java.io.*;
+import java.util.Arrays;
+
+public class P_1806 {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+
+        int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int n = arr[0], m = arr[1];
+        int[] numbers = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        int ptr1, ptr2;
+        ptr1 = ptr2 = 0;
+        int sum = 0, len = 100001;
+        while (true) {
+            if (sum >= m) sum -= numbers[ptr1++];
+            else {
+                if (ptr2 == n) break;
+                sum += numbers[ptr2++];
+            }
+
+            if (sum >= m && ptr2 - ptr1 < len) len = ptr2 - ptr1;
+        }
+
+        if (len == 100001) bw.write("0");
+        else bw.write(Integer.toString(len));
+        bw.flush();
+    }
+}
