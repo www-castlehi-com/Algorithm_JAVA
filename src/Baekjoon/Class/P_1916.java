@@ -1,59 +1,73 @@
 package Baekjoon.Class;
 
 import java.io.*;
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 
 public class P_1916 {
 
-    static int[] minimumCost;
-    static ArrayList<int []>[] city;
+    static class Bus {
+        int target;
+        long fee;
+
+        public Bus(int target, long fee) {
+            this.target = target;
+            this.fee = fee;
+        }
+    }
+
+    static int n;
+    static ArrayList<Bus>[] graph;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        int n = Integer.parseInt(br.readLine());
+        n = Integer.parseInt(br.readLine());
         int m = Integer.parseInt(br.readLine());
 
-        city = new ArrayList[n + 1];
-        for (int i = 0; i < n + 1; i++) city[i] = new ArrayList<>();
+        graph = new ArrayList[n + 1];
+        for (int i = 0; i < n + 1; i++) graph[i] = new ArrayList<Bus>();
         for (int i = 0; i < m; i++) {
-            int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            int departure = arr[0], arrival = arr[1], weigh = arr[2];
-            city[departure].add(new int[]{arrival, weigh});
+            int[] line = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+
+            graph[line[0]].add(new Bus(line[1], line[2]));
         }
-        minimumCost = new int[n + 1];
-        Arrays.fill(minimumCost, Integer.MAX_VALUE);
-        minimumCost[1] = 0;
 
-        int[] arr = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+        int[] line = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        Dijkstra(arr[0]);
-
-        bw.write(Integer.toString(minimumCost[arr[1]]));
+        bw.write(Long.toString(Dijkstra(line[0], line[1])));
         bw.flush();
     }
 
-    private static void Dijkstra(int departure) {
-        PriorityQueue<int[]> queue = new PriorityQueue<>(Comparator.comparing(o -> o[1]));
-        queue.add(new int[]{departure, 0});
+    private static long Dijkstra(int start, int end) {
+        PriorityQueue<Bus> queue = new PriorityQueue<>(Comparator.comparing(o -> o.fee));
+        queue.add(new Bus(start, 0));
+
+        long[] dp = new long[n + 1];
+        Arrays.fill(dp, 100000000);
 
         while (!queue.isEmpty()) {
-            int[] poll = queue.poll();
+            Bus poll = queue.poll();
 
-            int cur = poll[0];
-            int time = poll[1];
+            int cur = poll.target;
+            long fee = poll.fee;
 
-            if (minimumCost[cur] < time) continue;
-            for (int i = 0; i < city[cur].size(); i++) {
-                int next = city[cur].get(i)[0];
-                int nextTime = time + city[cur].get(i)[1];
+            if (cur == end) break;
 
-                if (nextTime < minimumCost[next]) {
-                    minimumCost[next] = nextTime;
-                    queue.add(new int[]{next, nextTime});
+            for (Bus bus : graph[cur]) {
+                long nextFee = bus.fee + fee;
+                if (nextFee < dp[bus.target]) {
+                    dp[bus.target] = nextFee;
+
+                    queue.add(new Bus(bus.target, nextFee));
                 }
             }
         }
+
+        return dp[end];
     }
 }
