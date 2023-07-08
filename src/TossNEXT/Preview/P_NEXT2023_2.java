@@ -1,4 +1,4 @@
-package TossNEXT;
+package TossNEXT.Preview;
 
 import java.util.Scanner;
 
