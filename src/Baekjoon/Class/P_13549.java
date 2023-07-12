@@ -3,6 +3,7 @@ package Baekjoon.Class;
 import java.io.*;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class P_13549 {
@@ -18,6 +19,7 @@ public class P_13549 {
 
         info = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         map = new int[size];
+        Arrays.fill(map, 100000);
         visited = new boolean[size];
 
         bfs();
@@ -31,28 +33,25 @@ public class P_13549 {
 
         queue.add(info[0]);
         visited[info[0]] = true;
+        map[info[0]] = 0;
 
         while (!queue.isEmpty()) {
             int loc = queue.remove();
+            visited[loc] = true;
 
-            if (loc == info[1]) return;
-
-            if (loc * 2 < size && !visited[loc * 2]) {
+            if (loc * 2 < size && !visited[loc * 2] && map[loc * 2] > map[loc]) {
                 queue.addFirst(loc * 2);
                 map[loc * 2] = map[loc];
-                visited[loc * 2] = true;
             }
 
-            if (loc + 1 < size && !visited[loc + 1]) {
+            if (loc + 1 <= 100000 && !visited[loc + 1] && map[loc + 1] > map[loc]) {
                 queue.add(loc + 1);
                 map[loc + 1] = map[loc] + 1;
-                visited[loc + 1] = true;
             }
 
-            if (loc - 1 >= 0 && !visited[loc - 1]) {
+            if (loc - 1 >= 0 && !visited[loc - 1] && map[loc - 1] > map[loc]) {
                 queue.add(loc - 1);
                 map[loc - 1] = map[loc] + 1;
-                visited[loc - 1] = true;
             }
         }
     }
