@@ -1,3 +1,5 @@
+package Baekjoon.Class;
+
 import java.io.*;
 import java.util.Arrays;
 
