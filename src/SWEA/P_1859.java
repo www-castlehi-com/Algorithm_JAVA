@@ -3,7 +3,7 @@ package SWEA;
 import java.io.*;
 import java.util.Arrays;
 
-public class Solution {
+public class P_1859 {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
