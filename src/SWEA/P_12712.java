@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class P_12712 {
 
@@ -21,26 +22,30 @@ public class P_12712 {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st;
 
         int t = Integer.parseInt(br.readLine());
         for (int test = 1; test <= t; test++) {
-            int[] line = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            n = line[0]; m = line[1];
+            st = new StringTokenizer(br.readLine(), " ");
+            n = Integer.parseInt(st.nextToken());
+            m = Integer.parseInt(st.nextToken());
+
             map = new int[n][n];
             for (int i = 0; i < n; i++) {
-                map[i] = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+                st = new StringTokenizer(br.readLine(), " ");
+                for (int j = 0; j < n; j++) {
+                    map[i][j] = Integer.parseInt(st.nextToken());
+                }
             }
-            res = 0;
 
+            res = 0;
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     res = Math.max(res, catchFly(i, j));
                 }
             }
 
-            bw.write("#" + test + " " + res + "\n");
-            bw.flush();
+            System.out.println("#" + test + " " + res);
         }
     }
 

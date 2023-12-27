@@ -6,32 +6,38 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 public class P_1204 {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+        StringTokenizer st;
 
         int t = Integer.parseInt(br.readLine());
         while (t-- > 0) {
-            int test = Integer.parseInt(br.readLine());
-            int[] line = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            st = new StringTokenizer(br.readLine());
+            int test = Integer.parseInt(st.nextToken());
 
-            int[] scores = new int[101];
-            for (int num : line) {
-                scores[num]++;
+            st = new StringTokenizer(br.readLine(), " ");
+            int[] score = new int[1000];
+            for (int i = 0; i < 1000; i++) {
+                score[i] = Integer.parseInt(st.nextToken());
+            }
+
+            int[] statistic = new int[101];
+            for (int num : score) {
+                statistic[num]++;
             }
 
             int maxAns = 0, maxKey = 0;
             for (int i = 100; i >= 0; i--) {
-                if (maxAns < scores[i]) {
-                    maxAns = scores[i];
+                if (maxAns < statistic[i]) {
+                    maxAns = statistic[i];
                     maxKey = i;
                 }
             }
 
-            bw.write("#" + test + " " + maxKey + "\n");
+            System.out.println("#" + test + " " + maxKey);
         }
-        bw.flush();
     }
 }
