@@ -1,4 +1,4 @@
-package SWEA;
+package Baekjoon.Class;
 
 import java.io.*;
 import java.util.*;
