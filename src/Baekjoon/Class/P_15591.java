@@ -1,3 +1,5 @@
+package Baekjoon.Class;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +10,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
-public class Main {
+public class P_15591 {
 	
 	static int n;
 	static final int MAX = 1_000_000_001;
