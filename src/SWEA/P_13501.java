@@ -12,9 +12,9 @@ public class P_13501 {
 		StringTokenizer st;
 		StringBuilder sb = new StringBuilder();
 		
-		LinkedList<Integer> numbers = new LinkedList<Integer>();
 		st = new StringTokenizer(br.readLine());
 		int t = Integer.parseInt(st.nextToken());
+		LinkedList<Integer> numbers = new LinkedList<Integer>();
 		for (int test = 1; test <= t; test++) {
 			st = new StringTokenizer(br.readLine(), " ");
 			int n = Integer.parseInt(st.nextToken());
