@@ -102,6 +102,7 @@ class P_13072
 	}
 }
 
+
 class UserSolution
 {
 	
@@ -110,64 +111,121 @@ class UserSolution
 	static final int MAX_SCORE = 5;
 	
 	static class Soldier {
-		int mScore;
-		int mTeam;
+		int mID;
+		int version;
 		
-		public Soldier(int mScore, int mTeam) {
-			super();
-			this.mScore = mScore;
-			this.mTeam = mTeam;
-		}
-		
-		public void addScore(int mChangeScore) {
-			this.mScore += mChangeScore;
-			if (this.mScore > 5) this.mScore = 5;
-			else if (this.mScore < 1) this.mScore = 1;
+		public Soldier(int mID, int version) {
+			this.mID = mID;
+			this.version = version;
 		}
 	}
 	
-	static LinkedList<Integer>[][] teams;
-	static Soldier[] soldiers;
+	static class Node {
+		Soldier soldier;
+		Node next;
+		Node prev;
+		
+		public Node(Soldier soldier, Node next, Node prev) {
+			this.soldier = soldier;
+			this.next = next;
+			this.prev = prev;
+		}
+	}
+	
+	static class List {
+		Node head;
+		Node tail;
+		
+		public List() {
+			this.head = new Node(null, null, null);
+			this.tail = new Node(null, null, null);
+			
+			this.head.next = this.tail;
+			this.tail.prev = this.head;
+		}
+	}
+	
+	static List[][] teams;
+	static int[] soldiers;
+	static int[] version;
 	
 	public void init()
 	{
-		Soldier[] soldiers = new Soldier[MAX_SOLDIER + 1];
-		LinkedList<Integer>[][] teams = new LinkedList[MAX_TEAM][MAX_SCORE];
+		soldiers = new int[MAX_SOLDIER + 1];
+		teams = new List[MAX_TEAM + 1][MAX_SCORE + 1];
 		for (int i = 1; i <= MAX_TEAM; i++) {
 			for (int j = 1; j <= MAX_SCORE; j++) {
-				teams[i][j] = new LinkedList<>();
+				teams[i][j] = new List();
 			}
 		}
+		version = new int[MAX_SOLDIER + 1];
 	}
 	
 	public void hire(int mID, int mTeam, int mScore)
 	{
-		Soldier soldier = new Soldier(mScore, mTeam);
-		soldiers[mID] = soldier;
-		teams[mTeam][mScore].add(mID);
+		Soldier soldier = new Soldier(mID, ++version[mID]);
+		Node newNode = new Node(soldier, teams[mTeam][mScore].tail, teams[mTeam][mScore].tail.prev);
+		soldiers[mID] = mTeam;
+		teams[mTeam][mScore].tail.prev.next = newNode;
+		teams[mTeam][mScore].tail.prev = newNode;
 	}
 	
 	public void fire(int mID)
 	{
-		Soldier soldier = soldiers[mID];
-		teams[soldier.mTeam][soldier.mTeam].remove(soldier);
+		version[mID] = -1;
 	}
 
 	public void updateSoldier(int mID, int mScore)
 	{
-		Soldier soldier = soldiers[mID];
-		teams[soldier.mTeam][soldier.mScore].remove(soldier);
-		soldier.mScore = mScore;
-		teams[soldier.mTeam][soldier.mScore].add(mID);
+		hire(mID, soldiers[mID], mScore);
 	}
 
 	public void updateTeam(int mTeam, int mChangeScore)
 	{
-		
+		for (int i = MAX_SCORE; i >= 1; i--) {
+			changeMemory(mTeam, mChangeScore, (mChangeScore > 0) ? i : MAX_SCORE + 1 - i);
+		}
+	}
+
+	private void changeMemory(int mTeam, int mChangeScore, int i) {
+		int targetScore = addScore(i, mChangeScore);
+		List mover = teams[mTeam][i];
+		if (i != targetScore && mover.head.next != mover.tail) {
+			List target = teams[mTeam][targetScore];
+			
+			target.tail.prev.next = mover.head.next;
+			mover.head.next.prev = target.tail.prev;
+			mover.tail.prev.next = target.tail;
+			target.tail.prev = mover.tail.prev;
+			mover.head.next = mover.tail;
+			mover.tail.prev = mover.head;
+			
+		}
 	}
 	
 	public int bestSoldier(int mTeam)
 	{
-		return 0;
+		int max = 0;
+		for (int i = MAX_SCORE; i >= 1; i--) {
+			List target = teams[mTeam][i];
+			for (Node ptr = target.head.next; ptr != target.tail; ptr = ptr.next) {
+				if (version[ptr.soldier.mID] == ptr.soldier.version) {
+					max = Math.max(max, ptr.soldier.mID);
+				}
+			}
+			
+			if (max != 0) {
+				break;
+			}
+		}
+		return max;
+	}
+	
+	private int addScore(int score, int changeScore) {
+		score += changeScore;
+		if (score > 5) score = 5;
+		else if (score < 1) score = 1;
+		
+		return score;
 	}
 }
