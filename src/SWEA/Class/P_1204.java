@@ -1,4 +1,4 @@
-package SWEA;
+package SWEA.Class;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
