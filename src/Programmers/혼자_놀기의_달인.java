@@ -3,10 +3,9 @@ package Programmers;
 import java.util.*;
 
 public class 혼자_놀기의_달인 {
-    static List<Integer> graph = new ArrayList<Integer>();
+    static List<Integer> graph = new ArrayList<>();
 
     public int solution(int[] cards) {
-        int answer = 0;
         int numberOfCards = cards.length;
 
         boolean[] visited = new boolean[numberOfCards];
