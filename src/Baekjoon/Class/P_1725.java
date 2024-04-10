@@ -1,7 +1,9 @@
+package Baekjoon.Class;
+
 import java.io.*;
 import java.util.*;
 
-public class Main
+public class P_1725
 {
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
