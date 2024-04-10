@@ -85,31 +85,6 @@ public class 루돌프의_반란 {
 		
 		System.out.print(sb);
 	}
-	
-	private static void print() {
-		System.out.println("========================");
-		System.out.println("rr :" + rr + ", rc : " + rc);
-		
-		System.out.println("score");
-		for (int i = 1; i <= p; i++) {
-			System.out.print(santas[i].score + " ");
-		}
-		System.out.println();
-		
-		System.out.println("left");
-		for (int i = 1; i <= p ; i++) {
-			System.out.print(santas[i].left + " ");
-		}
-		System.out.println();
-		
-		for (int i = 1; i <= n; i++) {
-			for (int j = 1; j<= n; j++) {
-				System.out.print(map[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println("========================\n");
-	}
 
 	public static void main(String[] args) throws IOException {
 		initialize();
@@ -141,15 +116,9 @@ public class 루돌프의_반란 {
 				
 				santas[j].score++;
 			}
-			
-//			print();
 		}
 		
 		printResult();
-	}
-	
-	private static int calcDist(int or, int oc, int tr, int tc) {
-		return (int) (Math.pow((or - tr), 2) + Math.pow((oc - tc), 2));
 	}
 	
 	private static Santa findMinDistSanta() {
@@ -207,18 +176,6 @@ public class 루돌프의_반란 {
 		rc += unitC;
 	}
 	
-	private static int getUnitVector(int v) {
-		if (v == 0) {
-			return 0;
-		}
-		else if (v > 0) {
-			return 1;
-		}
-		else {
-			return -1;
-		}
-	}
-	
 	private static void moveSanta(Santa target) {
 		int curR = target.r;
 		int curC = target.c;
@@ -266,21 +223,6 @@ public class 루돌프의_반란 {
 		}
 	}
 	
-	private static int getDir(int dir) {		
-		switch (dir) {
-		case 0:
-			return 2;
-		case 1:
-			return 3;
-		case 2:
-			return 0;
-		case 3:
-			return 1;
-		}
-		
-		return -1;
-	}
-	
 	private static void hitSanta(Santa target, int dir, int amount) {
 		int sr = target.r;
 		int sc = target.c;
@@ -308,5 +250,36 @@ public class 루돌프의_반란 {
 			target.isDead = true;
 			liveSanta--;
 		}
+	}
+	
+	private static int calcDist(int or, int oc, int tr, int tc) {
+		return (int) (Math.pow((or - tr), 2) + Math.pow((oc - tc), 2));
+	}
+	
+	private static int getUnitVector(int v) {
+		if (v == 0) {
+			return 0;
+		}
+		else if (v > 0) {
+			return 1;
+		}
+		else {
+			return -1;
+		}
+	}
+	
+	private static int getDir(int dir) {		
+		switch (dir) {
+		case 0:
+			return 2;
+		case 1:
+			return 3;
+		case 2:
+			return 0;
+		case 3:
+			return 1;
+		}
+		
+		return -1;
 	}
 }
