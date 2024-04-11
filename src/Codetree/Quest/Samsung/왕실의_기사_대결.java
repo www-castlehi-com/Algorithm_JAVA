@@ -78,33 +78,10 @@ public class 왕실의_기사_대결 {
 		System.out.print(sum);
 	}
 	
-	private static void subPrint() {
-		int[][] soldierMap = new int[l + 1][l + 1];
-		for (int i = 1; i <= n; i++) {
-			Soldier soldier = soldiers[i];
-			if (!soldier.isDead) {
-				for (int j = soldier.r; j < soldier.r + soldier.h; j++) {
-					for (int k = soldier.c; k < soldier.c + soldier.w ; k++) {
-						soldierMap[j][k] = i;
-					}
-				}
-			}
-		}
-		
-		for (int i = 1; i <= l; i++) {
-			for (int j = 1; j <= l; j++) {
-				System.out.print(soldierMap[i][j] + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	
 	public static void main(String[] args) throws IOException {
 		initialize();
 		
 		for (int j = 0; j < q; j++) {
-//			subPrint();
 			st = new StringTokenizer(br.readLine());
 			int i = Integer.parseInt(st.nextToken());
 			int d = Integer.parseInt(st.nextToken());
