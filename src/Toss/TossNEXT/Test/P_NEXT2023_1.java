@@ -1,4 +1,4 @@
-package TossNEXT.Test;
+package Toss.TossNEXT.Test;
 
 import java.io.*;
 import java.util.Arrays;
