@@ -37,18 +37,22 @@ public class Main {
     }
     
     private static void union(int a, int b) {
-        int aParent = find(a);
-        int bParent = find(b);
+        a = find(a);
+        b = find(b);
         
-        set[bParent] = aParent;
+        if (a != b) {
+            if (a < b) {
+                set[b] = a;
+            } else {
+                set[a] = b;
+            }
+        }
     }
     
     private static int find(int a) {
-        int parent = set[a];
-        while (set[parent] != parent) {
-            parent = set[parent];
+        if (set[a] == a) {
+            return a;
         }
-        
-        return parent;
+        return set[a] = find(set[a]);
     }
 }
