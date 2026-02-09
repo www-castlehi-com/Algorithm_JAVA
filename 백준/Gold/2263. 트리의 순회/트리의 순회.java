@@ -1,47 +1,34 @@
 import java.io.*;
-import java.util.Arrays;
+import java.util.*;
 
 public class Main {
-
-    static BufferedWriter bw;
+    
+    static int n;
     static int[] inOrder, postOrder;
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
-
-        int n = Integer.parseInt(br.readLine());
-        inOrder = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+    
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		n = Integer.parseInt(br.readLine());
+		inOrder = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
         postOrder = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
-        int root = postOrder[n - 1];
-        int leftStart = 0, leftEnd = 0, rightStart = 0, rightEnd = n - 1;
-        for (int i = 0; i < n; i++) {
-            if (inOrder[i] == root) {
-                bw.write(root + " ");
-                if (i != 0) findTree(i, 0, i - 1, 0, i - 1);
-                if (n - i - 1 != 0) findTree(n - i - 1, i + 1, n - 1, i, n - 2);
-                break;
-            }
-        }
-
-        bw.flush();
-    }
-
-    private static void findTree(int length, int inStart, int inEnd, int poStart, int poEnd) throws IOException {
-        int root = postOrder[poEnd];
-        bw.write(root + " ");
-
-        if (length == 1) return ;
-
-        int subLen = 0;
-        for (int i = inStart; i <= inEnd; i++) {
-            if (inOrder[i] == root) {
-                if (subLen != 0) findTree(subLen, inStart, inStart + subLen - 1, poStart, poStart + subLen - 1);
-                if (length - subLen - 1 != 0) findTree(length - subLen - 1, inStart + subLen + 1, inEnd, poStart + subLen, poEnd - 1);
-                break;
-            }
-            subLen++;
-        }
-    }
+        
+        printPreOrder(0, n - 1, 0, n - 1);
+	}
+	
+	private static void printPreOrder(int inStart, int inEnd, int postStart, int postEnd) {
+	    if (inStart > inEnd || postStart > postEnd) {
+	        return;
+	    }
+	    
+	    int root = postOrder[postEnd];
+	    System.out.print(root + " ");
+	    int idxDiff = postStart - inStart;
+	    for (int i = inStart; i <= inEnd; i++) {
+	        if (inOrder[i] == root) {
+	            printPreOrder(inStart, i - 1, postStart, i - 1 + idxDiff);
+	            printPreOrder(i + 1, inEnd, i + idxDiff, postEnd - 1);
+	        }
+	    }
+	}
 }
