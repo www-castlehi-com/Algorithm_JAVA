@@ -1,16 +1,17 @@
-import java.util.*;
-
 class Solution {
-
-    private Map<Integer, Integer> subtracted = new HashMap<>();
-
     public int[] twoSum(int[] numbers, int target) {
-        for (int i = 0; i < numbers.length; i++) {
-            if (subtracted.containsKey(numbers[i])) {
-                return new int[]{subtracted.get(numbers[i]), i + 1};
-            }
+        int start = 0;
+        int end = numbers.length - 1;
 
-            subtracted.put(target - numbers[i], i + 1);
+        while (start < end) {
+            int sum = numbers[start] + numbers[end];
+            if (sum == target) {
+                return new int[]{start + 1, end + 1};
+            } else if (numbers[start] + numbers[end] > target) {
+                end--;
+            } else {
+                start++;
+            }
         }
 
         return new int[]{};
