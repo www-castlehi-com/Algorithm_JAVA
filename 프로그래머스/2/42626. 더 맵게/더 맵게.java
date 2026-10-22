@@ -2,23 +2,22 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] scoville, int K) {
-        PriorityQueue<Long> mixedScovilles = new PriorityQueue<>();
-        for (int food : scoville) {
-            mixedScovilles.add((long)food);
+        Queue<Integer> foods = new PriorityQueue<>();
+        for (int scovillePoint: scoville) {
+            foods.add(scovillePoint);
         }
-        
+
         int count = 0;
-        while (mixedScovilles.size() >= 2 && mixedScovilles.peek() < K) {
-            long scoville1 = mixedScovilles.poll();
-            long scoville2 = mixedScovilles.poll();
+        while (foods.peek() < K) {
+            if (foods.size() == 1) {
+                return -1;
+            }
             
-            long result = (scoville1 + (scoville2 * 2));
-            
-            mixedScovilles.add(result);
-            
+            int point = foods.poll() + foods.poll() * 2;
+            foods.add(point);
             count++;
         }
         
-        return (mixedScovilles.peek() < K) ? -1 : count;
+        return count;
     }
 }
