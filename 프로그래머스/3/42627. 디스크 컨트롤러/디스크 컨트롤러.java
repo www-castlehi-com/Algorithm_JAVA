@@ -2,54 +2,34 @@ import java.util.*;
 
 class Solution {
     
-    private class Disk {
-        int idx;
-        int requestTime;
-        int durationTime;
-        
-        public Disk(int idx, int requestTime, int durationTime) {
-            this.idx = idx;
-            this.requestTime = requestTime;
-            this.durationTime = durationTime;
-        }
-    }
-    
     public int solution(int[][] jobs) {
         Arrays.sort(jobs, (j1, j2) -> j1[0] - j2[0]);
-        PriorityQueue<Disk> diskController = new PriorityQueue<>((d1, d2) -> {
-            if (d1.durationTime != d2.durationTime) {
-                return d1.durationTime - d2.durationTime;
-            }
-            
-            if (d1.requestTime != d2.requestTime) {
-                return d1.requestTime - d2.requestTime;
-            }
-            
-            return d1.idx - d2.idx;
+        
+        Queue<int[]> pq = new PriorityQueue<>((j1, j2) -> {
+            if (j1[2] != j2[2]) return j1[2] - j2[2];
+            if (j1[1] != j2[1]) return j1[1] - j2[1];
+            return j1[0] - j2[0];
         });
         
-        int endCount = 0;
         int idx = 0;
         int curTime = 0;
-        int elapsedTime = 0;
-        while(endCount < jobs.length) {
+        int totalTime = 0;
+        while (!pq.isEmpty() || idx < jobs.length) {
             while (idx < jobs.length && jobs[idx][0] <= curTime) {
-                diskController.add(new Disk(idx, jobs[idx][0], jobs[idx][1]));
+                pq.add(new int[]{idx, jobs[idx][0], jobs[idx][1]});
                 idx++;
             }
-            
-            if (diskController.isEmpty()) {
+            if (pq.isEmpty()) {
                 curTime = jobs[idx][0];
-            } else {
-                Disk disk = diskController.poll();
-            
-                curTime += disk.durationTime;
-                elapsedTime += (curTime - disk.requestTime);
-                
-                endCount++;
+                continue;
             }
+            
+            int[] job = pq.poll();
+            
+            curTime += job[2];
+            totalTime += (curTime - job[1]);
         }
         
-        return elapsedTime / jobs.length;
+        return totalTime / jobs.length;
     }
 }
