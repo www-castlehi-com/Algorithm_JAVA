@@ -36,13 +36,4 @@ class Solution {
         
         return minCost;
     }
-    
-    private boolean isAllVisited(int n, boolean[] visited) {
-        for (int i = 0; i < n; i++) {
-            if (!visited[i]) {
-                 return false;
-            }
-        }
-        return true;
-    }
 }
